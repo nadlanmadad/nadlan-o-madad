@@ -4,9 +4,9 @@ import type { RealEstateState, RealEstateResults } from "@/types";
 const VAT = 1.17;
 
 export const CITY_DEFAULTS: Record<string, number> = {
-  "תל אביב": 7, "ירושלים": 6, "חיפה": 5, "באר שבע": 6,
-  "נתניה": 6, "ראשון לציון": 6, "הרצליה": 6, "רמת גן": 6,
-  "פתח תקווה": 5.5, "אחר": 5,
+  "תל אביב": 5, "ירושלים": 4.5, "חיפה": 4, "באר שבע": 4.5,
+  "נתניה": 4.5, "ראשון לציון": 4.5, "הרצליה": 4.5, "רמת גן": 4.5,
+  "פתח תקווה": 4, "אחר": 4,
 };
 
 export const MADLAN_URLS: Record<string, string> = {
@@ -52,7 +52,7 @@ function calcCAGR(totalReturn: number, equity: number, years: number): number {
 }
 
 export const DEFAULT_RE_STATE: RealEstateState = {
-  propertyPrice: 2000000, city: "תל אביב", profile: "investment",
+  propertyPrice: 1800000, city: "תל אביב", profile: "investment",
   rentingElsewhere: false, rentPaidMonthly: 0,
   lawyerPct: 0.75,
   hasBrokerage: true, brokeragePct: 1,
@@ -68,7 +68,7 @@ export const DEFAULT_RE_STATE: RealEstateState = {
   taxTrack: "exempt", marginalRate: 30,
   hasPropertyMgmt: false, propertyMgmtPct: 9,
   inflationPct: 3,
-  pessimisticGrowth: 5, realisticGrowth: 7, optimisticGrowth: 10,
+  pessimisticGrowth: 2, realisticGrowth: 5, optimisticGrowth: 8,
   hasExitBrokerage: true, exitBrokeragePct: 1,
   exitLawyerPct: 0.5,
   hasEarlyRepayment: false, earlyRepaymentAmount: 0,
@@ -80,8 +80,8 @@ type Action = { type: "SET"; field: keyof RealEstateState; value: any }
 
 function reducer(state: RealEstateState, action: Action): RealEstateState {
   if (action.type === "SET_CITY") {
-    const r = CITY_DEFAULTS[action.city] ?? 5;
-    return { ...state, city: action.city, realisticGrowth: r, pessimisticGrowth: Math.max(0, r - 2), optimisticGrowth: r + 3 };
+    const r = CITY_DEFAULTS[action.city] ?? 4;
+    return { ...state, city: action.city, realisticGrowth: r, pessimisticGrowth: Math.max(0, r - 3), optimisticGrowth: r + 3 };
   }
   if (action.type === "LOAD") return action.state;
   return { ...state, [action.field]: action.value };

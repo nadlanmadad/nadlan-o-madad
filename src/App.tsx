@@ -10,7 +10,7 @@ import { T } from "@/theme";
 import type { RealEstateState, IndexState } from "@/types";
 
 export default function App() {
-  const [equity, setEquity] = useState(851450);
+  const [equity, setEquity] = useState(500000);
   const [years, setYears] = useState(10);
   const calcRef = useRef<HTMLDivElement>(null);
 
