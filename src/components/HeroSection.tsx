@@ -1,6 +1,6 @@
 import { T } from "@/theme";
 import type { RealEstateState } from "@/types";
-import { DEFAULT_RE_STATE, CITY_DEFAULTS } from "@/hooks/useRealEstateCalc";
+import { DEFAULT_RE_STATE } from "@/hooks/useRealEstateCalc";
 import { DEFAULT_IDX_STATE } from "@/hooks/useIndexCalc";
 import type { IndexState } from "@/types";
 
