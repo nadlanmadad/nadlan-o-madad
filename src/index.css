@@ -57,3 +57,58 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ===== Mobile responsiveness ===== */
+.app-header {
+  padding: 0 1.5rem;
+}
+.app-header-inner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.app-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    padding: 0.75rem 1rem;
+  }
+  .app-header-inner {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+  .app-header-controls {
+    flex-direction: column;
+    align-items: stretch;
+    margin-right: 0;
+    gap: 0.5rem;
+  }
+  .app-header-controls > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .app-header-controls input[type="number"] {
+    width: 100% !important;
+  }
+}
+
+/* Hide number input spinners for cleaner look */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .calc-container {
+    padding: 1rem !important;
+  }
+}

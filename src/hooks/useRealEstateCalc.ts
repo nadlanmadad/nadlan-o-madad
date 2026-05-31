@@ -24,6 +24,11 @@ export const MADLAN_URLS: Record<string, string> = {
 
 export function getMadlanUrl(city: string) { return MADLAN_URLS[city] || MADLAN_URLS["אחר"]; }
 
+// אתר נדל"ן הממשלתי — עסקאות אמיתיות מרשות המיסים
+export function getGovNadlanUrl(city: string) {
+  return `https://www.nadlan.gov.il/?view=address&query=${encodeURIComponent(city)}`;
+}
+
 function calcPurchaseTax(price: number, profile: "investment" | "single"): number {
   if (profile === "investment") return price * 0.08;
   if (price <= 1846337) return 0;

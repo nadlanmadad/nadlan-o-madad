@@ -1,6 +1,6 @@
 import { Panel, Section, Field, NumberInput, Toggle, Select, ResultBadge, Divider, fmtILS } from "@/components/UI";
 import type { RealEstateState, RealEstateResults } from "@/types";
-import { getMadlanUrl } from "@/hooks/useRealEstateCalc";
+import { getMadlanUrl, getGovNadlanUrl } from "@/hooks/useRealEstateCalc";
 import { T } from "@/theme";
 
 const CITIES = ["תל אביב","ירושלים","חיפה","באר שבע","נתניה","ראשון לציון","הרצליה","רמת גן","פתח תקווה","אחר"];
@@ -32,15 +32,21 @@ export function RealEstatePanel({ state: s, dispatch, results: r, years }: Props
       <Section title="📍 פרטי נכס">
         <Field label="מחיר נכס (₪)"><NumberInput value={s.propertyPrice} onChange={set("propertyPrice")} step={50000} min={100000} /></Field>
         <Field label="עיר">
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <div style={{ flex: 1 }}><Select value={s.city} onChange={city => dispatch({ type: "SET_CITY", city })} options={CITIES} /></div>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: 120 }}><Select value={s.city} onChange={city => dispatch({ type: "SET_CITY", city })} options={CITIES} /></div>
             <a href={getMadlanUrl(s.city)} target="_blank" rel="noopener noreferrer"
               style={{ fontSize: 11, background: T.bgElevated, border: `1px solid ${T.gold}66`, borderRadius: T.radiusSm, padding: "6px 10px", color: T.gold, textDecoration: "none", whiteSpace: "nowrap" }}>
               מדלן ↗
             </a>
+            <a href={getGovNadlanUrl(s.city)} target="_blank" rel="noopener noreferrer"
+              style={{ fontSize: 11, background: T.bgElevated, border: `1px solid ${T.info}66`, borderRadius: T.radiusSm, padding: "6px 10px", color: T.info, textDecoration: "none", whiteSpace: "nowrap" }}>
+              נדל״ן ממשלתי ↗
+            </a>
           </div>
           <div style={{ marginTop: 6, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusSm, padding: "8px 10px", fontSize: 11, color: T.textSecondary, lineHeight: 1.7 }}>
-            ב-madlan: גלול ל<strong>מגמות מחירים</strong> ← קרא % שינוי שנתי ← הזן ב"ריאלי"
+            <strong style={{ color: T.gold }}>מדלן</strong> — מגמת מחירים ממוצעת לאזור<br />
+            <strong style={{ color: T.info }}>נדל״ן ממשלתי</strong> — עסקאות אמיתיות מרשות המיסים (מדויק יותר)<br />
+            השווה % שינוי שנתי ← הזן ב"ריאלי" למטה
           </div>
         </Field>
         <Field label="פרופיל רוכש">

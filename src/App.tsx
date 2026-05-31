@@ -30,26 +30,30 @@ export default function App() {
       <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
       {/* STICKY HEADER */}
-      <header style={{ background: T.bgSurface, borderBottom:`1px solid ${T.border}`, padding:"0 1.5rem", position:"sticky", top:0, zIndex:100 }}>
-        <div style={{ maxWidth:1400, margin:"0 auto", height:56, display:"flex", alignItems:"center", gap:"1.5rem" }}>
+      <header className="app-header" style={{ background: T.bgSurface, borderBottom:`1px solid ${T.border}`, position:"sticky", top:0, zIndex:100 }}>
+        <div className="app-header-inner" style={{ maxWidth:1400, margin:"0 auto" }}>
           <span style={{ fontSize:16, fontWeight:700, color:T.textPrimary, letterSpacing:"-0.5px", flexShrink:0 }}>נדלן או מדד</span>
-          <span style={{ fontSize:10, color:T.textMuted, display:"none" }}>|</span>
 
-          <div style={{ display:"flex", alignItems:"center", gap:8, marginRight:"auto" }}>
-            <label style={{ fontSize:11, color:T.textMuted, whiteSpace:"nowrap" }}>הון עצמי</label>
-            <div style={{ display:"flex", alignItems:"center", gap:4, background:T.bgElevated, border:`1px solid ${T.border}`, borderRadius:T.radiusSm, padding:"4px 8px" }}>
-              <span style={{ fontSize:12, color:T.textMuted }}>₪</span>
-              <input type="number" value={equity} step={10000} min={0} onChange={e=>setEquity(parseFloat(e.target.value)||0)}
-                style={{ width:110, fontSize:13, fontWeight:600, border:"none", background:"transparent", color:T.gold, outline:"none", textAlign:"left", direction:"ltr" }} />
+          <div className="app-header-controls">
+            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+              <label style={{ fontSize:11, color:T.textMuted, whiteSpace:"nowrap", minWidth:60 }}>הון עצמי</label>
+              <div style={{ display:"flex", alignItems:"center", gap:4, background:T.bgElevated, border:`1px solid ${T.border}`, borderRadius:T.radiusSm, padding:"6px 8px", flex:1 }}>
+                <span style={{ fontSize:12, color:T.textMuted }}>₪</span>
+                <input type="number" value={equity} step={10000} min={0} onChange={e=>setEquity(parseFloat(e.target.value)||0)}
+                  style={{ width:110, fontSize:13, fontWeight:600, border:"none", background:"transparent", color:T.gold, outline:"none", textAlign:"left", direction:"ltr", minWidth:0 }} />
+              </div>
             </div>
-            <div style={{ display:"flex", alignItems:"center", gap:4, background:T.bgElevated, border:`1px solid ${T.border}`, borderRadius:T.radiusSm, padding:"4px 6px" }}>
-              {[5,10,15,20].map(y=>(
-                <button key={y} onClick={()=>setYears(y)}
-                  style={{ padding:"3px 8px", borderRadius:T.radiusSm-2, border:"none", fontSize:12, fontWeight:years===y?700:400, background:years===y?T.gold:"transparent", color:years===y?T.bgApp:T.textMuted, cursor:"pointer" }}>
-                  {y}
-                </button>
-              ))}
-              <span style={{ fontSize:11, color:T.textMuted }}>שנ׳</span>
+            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+              <label style={{ fontSize:11, color:T.textMuted, whiteSpace:"nowrap", minWidth:60, display:"none" }}>טווח</label>
+              <div style={{ display:"flex", alignItems:"center", gap:4, background:T.bgElevated, border:`1px solid ${T.border}`, borderRadius:T.radiusSm, padding:"5px 6px", flex:1, justifyContent:"center" }}>
+                {[5,10,15,20].map(y=>(
+                  <button key={y} onClick={()=>setYears(y)}
+                    style={{ flex:1, padding:"4px 8px", borderRadius:T.radiusSm-2, border:"none", fontSize:12, fontWeight:years===y?700:400, background:years===y?T.gold:"transparent", color:years===y?T.bgApp:T.textMuted, cursor:"pointer" }}>
+                    {y}
+                  </button>
+                ))}
+                <span style={{ fontSize:11, color:T.textMuted, flexShrink:0 }}>שנ׳</span>
+              </div>
             </div>
           </div>
         </div>
@@ -59,8 +63,8 @@ export default function App() {
       <HeroSection onScenario={handleScenario} onScrollToCalc={() => calcRef.current?.scrollIntoView({ behavior:"smooth" })} />
 
       {/* CALCULATOR */}
-      <div ref={calcRef} style={{ maxWidth:1400, margin:"0 auto", padding:"1.5rem" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))", gap:"1.25rem", alignItems:"start" }}>
+      <div ref={calcRef} style={{ maxWidth:1400, margin:"0 auto", padding:"1.5rem" }} className="calc-container">
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))", gap:"1.25rem", alignItems:"start" }}>
           <RealEstatePanel state={realEstate.state} dispatch={realEstate.dispatch} results={realEstate.results} years={years} />
           <IndexPanel state={index.state} dispatch={index.dispatch} results={index.results} years={years} />
         </div>
