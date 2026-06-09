@@ -122,7 +122,7 @@ export function RealEstatePanel({ state: s, dispatch, results: r, years }: Props
       </Section>
 
       <Section title="📈 עליית ערך צפויה" defaultOpen={true}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.5rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(90px,1fr))", gap: "0.5rem" }}>
           <Field label="פסימי (%)"><NumberInput value={s.pessimisticGrowth} onChange={set("pessimisticGrowth")} step={0.5} suffix="%" /></Field>
           <Field label="ריאלי (%)"><NumberInput value={s.realisticGrowth} onChange={set("realisticGrowth")} step={0.5} suffix="%" /></Field>
           <Field label="אופטימי (%)"><NumberInput value={s.optimisticGrowth} onChange={set("optimisticGrowth")} step={0.5} suffix="%" /></Field>
