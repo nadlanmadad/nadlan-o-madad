@@ -4,6 +4,7 @@ import { RealEstatePanel } from "@/components/RealEstatePanel";
 import { IndexPanel } from "@/components/IndexPanel";
 import { ComparisonPanel } from "@/components/ComparisonPanel";
 import { Comments } from "@/components/Comments";
+import { Wizard } from "@/components/Wizard";
 import { useRealEstateCalc } from "@/hooks/useRealEstateCalc";
 import { useIndexCalc } from "@/hooks/useIndexCalc";
 import { T } from "@/theme";
@@ -12,6 +13,7 @@ import type { RealEstateState, IndexState } from "@/types";
 export default function App() {
   const [equity, setEquity] = useState(500000);
   const [years, setYears] = useState(10);
+  const [mode, setMode] = useState<"wizard" | "advanced">("wizard");
   const calcRef = useRef<HTMLDivElement>(null);
 
   const realEstate = useRealEstateCalc(equity, years);
@@ -25,6 +27,23 @@ export default function App() {
     setTimeout(() => calcRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }
 
+  // מצב אשף — מסך מלא נפרד
+  if (mode === "wizard") {
+    return (
+      <div style={{ fontFamily: T.fontFamily, direction: "rtl" }}>
+        <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+        <Wizard
+          equity={equity} setEquity={setEquity}
+          years={years} setYears={setYears}
+          reState={realEstate.state} reDispatch={realEstate.dispatch} reResults={realEstate.results}
+          idxState={index.state} idxDispatch={index.dispatch} idxResults={index.results}
+          onFinish={() => { setMode("advanced"); setTimeout(() => calcRef.current?.scrollIntoView({ behavior: "smooth" }), 100); }}
+          onAdvanced={() => setMode("advanced")}
+        />
+      </div>
+    );
+  }
+
   return (
     <div style={{ fontFamily: T.fontFamily, direction: "rtl", minHeight: "100vh", background: T.bgApp, color: T.textPrimary }}>
       <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -33,6 +52,9 @@ export default function App() {
       <header className="app-header" style={{ background: T.bgSurface, borderBottom:`1px solid ${T.border}`, position:"sticky", top:0, zIndex:100 }}>
         <div className="app-header-inner" style={{ maxWidth:1400, margin:"0 auto" }}>
           <span style={{ fontSize:16, fontWeight:700, color:T.textPrimary, letterSpacing:"-0.5px", flexShrink:0 }}>נדלן או מדד</span>
+          <button onClick={() => setMode("wizard")} style={{ fontSize:11, color:T.gold, background:"transparent", border:`1px solid ${T.gold}66`, borderRadius:T.radiusSm, padding:"5px 10px", cursor:"pointer", flexShrink:0, whiteSpace:"nowrap" }}>
+            → אשף פשוט
+          </button>
 
           <div className="app-header-controls">
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
