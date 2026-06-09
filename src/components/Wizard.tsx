@@ -154,13 +154,39 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
         {step === 3 && (
           <div>
             <h2 style={{ fontSize: 24, fontWeight: 700, color: T.textPrimary, marginBottom: 8 }}>עלויות הרכישה</h2>
-            <p style={{ fontSize: 14, color: T.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>אלה ההוצאות החד-פעמיות שיורדות מההון העצמי. סימנו לך ברירות מחדל מקובלות — אפשר לכבות מה שלא רלוונטי.</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <WToggle checked={reState.hasBrokerage} onChange={setRE("hasBrokerage")} label={`תיווך (${reState.brokeragePct}%)`} />
-              <WToggle checked={reState.hasRenovation} onChange={setRE("hasRenovation")} label={`שיפוץ + עיצוב (${reState.renovationPct}%)`} />
-              <WToggle checked={reState.hasAppraiser} onChange={setRE("hasAppraiser")} label={`שמאי (${fmtILS(reState.appraiserAmount)})`} />
-              <WToggle checked={reState.hasInspection} onChange={setRE("hasInspection")} label={`בדק בית (${fmtILS(reState.inspectionAmount)})`} />
-              <WToggle checked={reState.hasMortgageAdvisor} onChange={setRE("hasMortgageAdvisor")} label={`ייעוץ משכנתא (${fmtILS(reState.mortgageAdvisorAmount)})`} />
+            <p style={{ fontSize: 14, color: T.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>אלה ההוצאות החד-פעמיות שיורדות מההון העצמי. ברירות מחדל מקובלות — אפשר לכבות או לערוך כל אחת.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                { key: "hasBrokerage", field: "brokeragePct", label: "תיווך", suffix: "%", step: 0.1 },
+                { key: "hasRenovation", field: "renovationPct", label: "שיפוץ + עיצוב", suffix: "%", step: 0.5 },
+              ].map(({ key, field, label, suffix, step: st }) => (
+                <div key={key} style={{ display: "flex", alignItems: "center", gap: 10, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: "10px 14px" }}>
+                  <div style={{ flex: 1 }}>
+                    <WToggle checked={(reState as any)[key]} onChange={setRE(key as any)} label={label} />
+                  </div>
+                  {(reState as any)[key] && (
+                    <div style={{ width: 100 }}>
+                      <WInput value={(reState as any)[field]} onChange={setRE(field as any)} suffix={suffix} />
+                    </div>
+                  )}
+                </div>
+              ))}
+              {[
+                { key: "hasAppraiser", field: "appraiserAmount", label: "שמאי", step: 100 },
+                { key: "hasInspection", field: "inspectionAmount", label: "בדק בית", step: 100 },
+                { key: "hasMortgageAdvisor", field: "mortgageAdvisorAmount", label: "ייעוץ משכנתא", step: 500 },
+              ].map(({ key, field, label }) => (
+                <div key={key} style={{ display: "flex", alignItems: "center", gap: 10, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: "10px 14px" }}>
+                  <div style={{ flex: 1 }}>
+                    <WToggle checked={(reState as any)[key]} onChange={setRE(key as any)} label={label} />
+                  </div>
+                  {(reState as any)[key] && (
+                    <div style={{ width: 130 }}>
+                      <WInput value={(reState as any)[field]} onChange={setRE(field as any)} prefix="₪" />
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
             <div style={{ marginTop: 20, padding: "12px 14px", background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, fontSize: 13, color: T.textSecondary }}>
               סך עלויות רכישה: <strong style={{ color: T.gold }}>{fmtILS(reResults.purchaseCosts)}</strong><br />
@@ -213,6 +239,17 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
                 <option value="marginal" style={{ background: T.bgElevated }}>מסלול שולי</option>
               </select>
             </div>
+            {reState.profile === "single" && (
+              <div style={{ marginTop: 20, padding: "14px", background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
+                <WToggle checked={reState.rentingElsewhere} onChange={setRE("rentingElsewhere")} label="אני גם שוכר דירה אחרת" />
+                {reState.rentingElsewhere && (
+                  <div style={{ marginTop: 10 }}>
+                    <WLabel hint="קיזוז שכ״ד ששולם מההכנסה החייבת — עד ₪7,500 לחודש">שכר דירה שאני משלם</WLabel>
+                    <WInput value={reState.rentPaidMonthly} onChange={v => setRE("rentPaidMonthly")(Math.min(7500, v))} prefix="₪" suffix="עד 7,500" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -249,8 +286,23 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
             <p style={{ fontSize: 14, color: T.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>כשתמכור את הנכס בסוף התקופה.</p>
             <WLabel>עו״ד מכירה</WLabel>
             <WInput value={reState.exitLawyerPct} onChange={setRE("exitLawyerPct")} suffix="%" />
-            <div style={{ marginTop: 16 }}>
-              <WToggle checked={reState.hasExitBrokerage} onChange={setRE("hasExitBrokerage")} label={`תיווך מכירה (${reState.exitBrokeragePct}%)`} />
+            <div style={{ marginTop: 16, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ flex: 1 }}>
+                <WToggle checked={reState.hasExitBrokerage} onChange={setRE("hasExitBrokerage")} label="תיווך מכירה" />
+              </div>
+              {reState.hasExitBrokerage && (
+                <div style={{ width: 100 }}>
+                  <WInput value={reState.exitBrokeragePct} onChange={setRE("exitBrokeragePct")} suffix="%" />
+                </div>
+              )}
+            </div>
+            <div style={{ marginTop: 12, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: "10px 14px" }}>
+              <WToggle checked={reState.hasEarlyRepayment} onChange={setRE("hasEarlyRepayment")} label="עמלת פירעון מוקדם" />
+              {reState.hasEarlyRepayment && (
+                <div style={{ marginTop: 10 }}>
+                  <WInput value={reState.earlyRepaymentAmount} onChange={setRE("earlyRepaymentAmount")} prefix="₪" />
+                </div>
+              )}
             </div>
             {reState.profile === "investment" && (
               <div style={{ marginTop: 20, padding: "12px 14px", background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, fontSize: 12, color: T.textMuted, lineHeight: 1.6 }}>
