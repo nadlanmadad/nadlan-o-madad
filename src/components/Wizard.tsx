@@ -157,9 +157,9 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
             <p style={{ fontSize: 14, color: T.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>אלה ההוצאות החד-פעמיות שיורדות מההון העצמי. ברירות מחדל מקובלות — אפשר לכבות או לערוך כל אחת.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
-                { key: "hasBrokerage", field: "brokeragePct", label: "תיווך", suffix: "%", step: 0.1 },
-                { key: "hasRenovation", field: "renovationPct", label: "שיפוץ + עיצוב", suffix: "%", step: 0.5 },
-              ].map(({ key, field, label, suffix, step: st }) => (
+                { key: "hasBrokerage", field: "brokeragePct", label: "תיווך", suffix: "%" },
+                { key: "hasRenovation", field: "renovationPct", label: "שיפוץ + עיצוב", suffix: "%" },
+              ].map(({ key, field, label, suffix }) => (
                 <div key={key} style={{ display: "flex", alignItems: "center", gap: 10, background: T.bgElevated, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: "10px 14px" }}>
                   <div style={{ flex: 1 }}>
                     <WToggle checked={(reState as any)[key]} onChange={setRE(key as any)} label={label} />
