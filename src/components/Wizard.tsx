@@ -339,7 +339,7 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
             <p style={{ fontSize: 14, color: T.textSecondary, marginBottom: 20, lineHeight: 1.7 }}>
               המדד אולי עשה {idxState.returnPct}% בשנה — אבל <strong style={{ color: T.gold }}>המשקיע הממוצע</strong> השיג הרבה פחות. מכירה בפחד, כניסה מאוחרת, וצרכי נזילות אוכלים את התשואה.
             </p>
-            <div style={{ background: `linear-gradient(135deg, #2a1500 0%, #1a0d00 100%)`, border: `1.5px solid ${T.negative}`, borderRadius: T.radiusMd, padding: "16px 18px", marginBottom: 20 }}>
+            <div style={{ background: `linear-gradient(135deg, #FBF3E0 0%, #F5E8C8 100%)`, border: `1.5px solid ${T.negative}`, borderRadius: T.radiusMd, padding: "16px 18px", marginBottom: 20 }}>
               <div style={{ fontSize: 13, color: T.textSecondary, marginBottom: 4 }}>מחקר DALBAR 2023</div>
               <div style={{ fontSize: 14, color: T.textPrimary, lineHeight: 1.6 }}>הפער בין תשואת המדד לתשואת המשקיע בפועל נקרא <strong style={{ color: T.negative }}>Behavior Gap</strong>.</div>
             </div>

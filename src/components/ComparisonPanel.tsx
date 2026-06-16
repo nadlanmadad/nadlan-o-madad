@@ -79,13 +79,13 @@ export function ComparisonPanel({ realEstateResults: re, indexResults: idx, year
 
         {/* BEHAVIOR GAP BANNER */}
         <div style={{ marginBottom: "1.5rem", border: humanMode ? `2px solid ${T.negative}` : `2px solid ${T.gold}`, borderRadius: T.radiusMd, overflow: "hidden", boxShadow: humanMode ? `0 0 24px ${T.negative}33` : `0 0 16px ${T.gold}22` }}>
-          <div style={{ background: humanMode ? T.negative : `linear-gradient(135deg, #2a2000 0%, #1a1500 100%)`, padding: "1rem 1.25rem", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <div style={{ background: humanMode ? T.negative : `linear-gradient(135deg, #FBF3E0 0%, #F5E8C8 100%)`, padding: "1rem 1.25rem", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
             <span style={{ fontSize: 22 }}>{humanMode ? "🧠" : "⚠️"}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: humanMode ? "#fff" : T.gold }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: humanMode ? "#fff" : "#6B5418" }}>
                 {humanMode ? "מצב אנושי — Behavior Gap" : "המדד השיג 10.5% — אבל האם השגת אותם?"}
               </div>
-              <div style={{ fontSize: 11, color: humanMode ? "rgba(255,255,255,0.75)" : `${T.gold}bb`, marginTop: 3 }}>
+              <div style={{ fontSize: 11, color: humanMode ? "rgba(255,255,255,0.75)" : "#8A6E28", marginTop: 3 }}>
                 {humanMode ? `מחושב לפי ${humanReturn}% | מקור: DALBAR QAIB 2023` : "המשקיע הממוצע קיבל 6.8% בפועל — פחד, טיימינג שגוי, צרכי נזילות"}
               </div>
             </div>

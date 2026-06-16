@@ -68,7 +68,7 @@ export function HeroSection({ onScenario, onScrollToCalc }: Props) {
     <div>
       {/* ===== HERO ===== */}
       <div style={{
-        background: `linear-gradient(160deg, #0f0f12 0%, ${T.bgApp} 60%)`,
+        background: `linear-gradient(160deg, #FFFFFF 0%, ${T.bgApp} 100%)`,
         borderBottom: `1px solid ${T.border}`,
         padding: "4rem 1.5rem 3rem",
         textAlign: "center",
