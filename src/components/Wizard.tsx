@@ -235,7 +235,7 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
               <WLabel>מסלול מס שכירות</WLabel>
               <select value={reState.taxTrack} onChange={e => setRE("taxTrack")(e.target.value)}
                 style={{ width: "100%", padding: "12px 14px", fontSize: 15, border: `1.5px solid ${T.border}`, borderRadius: T.radiusMd, background: T.bgInput, color: T.textPrimary, outline: "none" }}>
-                <option value="exempt" style={{ background: T.bgElevated }}>פטור (עד ₪5,470/חודש)</option>
+                <option value="exempt" style={{ background: T.bgElevated }}>פטור (עד ₪5,654/חודש)</option>
                 <option value="10pct" style={{ background: T.bgElevated }}>10% ללא ניכוי הוצאות</option>
                 <option value="marginal" style={{ background: T.bgElevated }}>מסלול שולי</option>
               </select>
@@ -245,7 +245,7 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
                 <WToggle checked={reState.rentingElsewhere} onChange={setRE("rentingElsewhere")} label="אני גם שוכר דירה אחרת" />
                 {reState.rentingElsewhere && (
                   <div style={{ marginTop: 10 }}>
-                    <WLabel hint="קיזוז שכ״ד ששולם מההכנסה החייבת — עד ₪7,500 לחודש">שכר דירה שאני משלם</WLabel>
+                    <WLabel hint="קיזוז זה זמין רק במסלול מס 10% — עד ₪7,500 לחודש">שכר דירה שאני משלם</WLabel>
                     <WInput value={reState.rentPaidMonthly} onChange={v => setRE("rentPaidMonthly")(Math.min(7500, v))} prefix="₪" suffix="עד 7,500" />
                   </div>
                 )}
@@ -342,6 +342,7 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
             </p>
             <div style={{ background: `linear-gradient(135deg, #FBF3E0 0%, #F5E8C8 100%)`, border: `1.5px solid ${T.negative}`, borderRadius: T.radiusMd, padding: "16px 18px", marginBottom: 20 }}>
               <div style={{ fontSize: 13, color: T.textSecondary, marginBottom: 4 }}>מחקר DALBAR 2023</div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 8, lineHeight: 1.5 }}>הנתון (6.8%) מבוסס על משקיעי קרנות מניות אמריקאיות רחבות (בעיקר S&P 500). עבור Nasdaq/MSCI ייתכן פער שונה.</div>
               <div style={{ fontSize: 14, color: T.textPrimary, lineHeight: 1.6 }}>הפער בין תשואת המדד לתשואת המשקיע בפועל נקרא <strong style={{ color: T.negative }}>Behavior Gap</strong>.</div>
             </div>
             <WToggle checked={useHuman} onChange={setUseHuman} label="הצג תשואה אנושית מציאותית בתוצאה" />

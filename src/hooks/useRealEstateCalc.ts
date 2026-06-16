@@ -30,11 +30,17 @@ export function getGovNadlanUrl(city: string) {
 }
 
 function calcPurchaseTax(price: number, profile: "investment" | "single"): number {
-  if (profile === "investment") return price * 0.08;
-  if (price <= 1846337) return 0;
-  if (price <= 2190000) return (price - 1846337) * 0.035;
-  if (price <= 5329131) return (2190000 - 1846337) * 0.035 + (price - 2190000) * 0.05;
-  return (2190000 - 1846337) * 0.035 + (5329131 - 2190000) * 0.05 + (price - 5329131) * 0.08;
+  // דירה נוספת (השקעה): 8% עד 6,055,070 ₪, 10% מעבר — מהשקל הראשון. מדרגות 2026 (קפוא עד 15.1.2028)
+  if (profile === "investment") {
+    if (price <= 6055070) return price * 0.08;
+    return 6055070 * 0.08 + (price - 6055070) * 0.10;
+  }
+  // דירה יחידה — מדרגות 2026 (קפוא עד 15.1.2028)
+  if (price <= 1978745) return 0;
+  if (price <= 2347040) return (price - 1978745) * 0.035;
+  if (price <= 6055070) return (2347040 - 1978745) * 0.035 + (price - 2347040) * 0.05;
+  if (price <= 20183565) return (2347040 - 1978745) * 0.035 + (6055070 - 2347040) * 0.05 + (price - 6055070) * 0.08;
+  return (2347040 - 1978745) * 0.035 + (6055070 - 2347040) * 0.05 + (20183565 - 6055070) * 0.08 + (price - 20183565) * 0.10;
 }
 
 function calcMortgagePayment(principal: number, annualRate: number, years: number): number {
@@ -102,7 +108,13 @@ export function useRealEstateCalc(equity: number, years: number) {
     const mortgageAdvisor = s.hasMortgageAdvisor ? s.mortgageAdvisorAmount : 0;
     const renovation = s.hasRenovation ? price * (s.renovationPct / 100) : 0;
     const purchaseCosts = purchaseTax + lawyer + brokerage + appraiser + inspection + mortgageOpen + mortgageAdvisor + renovation;
-    const downPayment = Math.max(0, equity - purchaseCosts);
+    // ההון הזמין למקדמה (אחרי עלויות רכישה)
+    const equityForDownPayment = Math.max(0, equity - purchaseCosts);
+    // המקדמה לא יכולה לעלות על מחיר הנכס — מעבר לזה אין מה לממן
+    const downPayment = Math.min(equityForDownPayment, price);
+    // עודף הון שלא נכנס לנכס — מושקע במכשיר נזיל בטוח (מק"מ/פיקדון), לא "נעלם"
+    const excessCash = Math.max(0, equityForDownPayment - price);
+    const EXCESS_CASH_RATE = 0.04; // תשואה שמרנית למכשיר נזיל (מק"מ/פיקדון)
     const mortgage = Math.max(0, price - downPayment);
     const monthlyPayment = calcMortgagePayment(mortgage, s.mortgageRate, s.mortgageYears);
 
@@ -131,13 +143,19 @@ export function useRealEstateCalc(equity: number, years: number) {
         const ins = (s.buildingInsurance + s.lifeInsurance) * inflation;
         const mgmt = s.hasPropertyMgmt ? effectiveRent * (s.propertyMgmtPct / 100) : 0;
         let rentalTax = 0;
-        const EXEMPT_CEILING = 5470 * 12;
-        if (s.taxTrack === "10pct") rentalTax = effectiveRent * 0.10;
-        else if (s.taxTrack === "marginal") {
-          let taxable = effectiveRent;
-          if (s.profile === "single" && s.rentingElsewhere) taxable = Math.max(0, effectiveRent - s.rentPaidMonthly * 12);
-          rentalTax = taxable * (s.marginalRate / 100);
-        } else if (effectiveRent > EXEMPT_CEILING) rentalTax = (effectiveRent - EXEMPT_CEILING) * 0.10;
+        const EXEMPT_CEILING = 5654 * 12; // תקרת פטור חודשית 2026
+        if (s.taxTrack === "10pct") {
+          // קיזוז שכ"ד ששולם זמין רק במסלול 10% — לבעל דירה יחידה ששוכר בעצמו (עד 7,500/חודש)
+          let taxable10 = effectiveRent;
+          if (s.profile === "single" && s.rentingElsewhere) {
+            taxable10 = Math.max(0, effectiveRent - Math.min(s.rentPaidMonthly * 12, 90000));
+          }
+          rentalTax = taxable10 * 0.10;
+        } else if (s.taxTrack === "marginal") {
+          rentalTax = effectiveRent * (s.marginalRate / 100);
+        } else if (effectiveRent > EXEMPT_CEILING) {
+          rentalTax = (effectiveRent - EXEMPT_CEILING) * 0.10;
+        }
         const totalExpenses = annualInterest + maintenance + condo + ins + mgmt + rentalTax;
         const cashflow = effectiveRent - totalExpenses;
         totalCashflow += cashflow;
@@ -146,14 +164,19 @@ export function useRealEstateCalc(equity: number, years: number) {
 
       const finalValue = price * Math.pow(1 + growthPct / 100, years);
       const grossGain = finalValue - price;
-      const accDepreciation = price * 0.015 * years;
+      // פחת: רק על מרכיב המבונה (~2/3), בשיעור 1.5%/שנה, מקסימום 25 שנה
+      const BUILDING_SHARE = 0.667;
+      const depYears = Math.min(years, 25);
+      const accDepreciation = price * BUILDING_SHARE * 0.015 * depYears;
       const taxableGain = grossGain + accDepreciation;
       const exitBrokerageCost = s.hasExitBrokerage ? finalValue * (s.exitBrokeragePct / 100) * VAT : 0;
       const exitLawyer = finalValue * (s.exitLawyerPct / 100) * VAT;
       const earlyRepayment = s.hasEarlyRepayment ? s.earlyRepaymentAmount : 0;
       const capitalGainTax = s.profile === "investment" ? taxableGain * 0.25 : 0;
       const netCapitalGain = grossGain - capitalGainTax - exitBrokerageCost - exitLawyer - earlyRepayment;
-      const totalReturn = totalCashflow + netCapitalGain;
+      // עודף ההון שלא נכנס לנכס — צמח במכשיר נזיל בטוח (אחרי מס רווח הון 25%)
+      const excessCashGrowth = excessCash * (Math.pow(1 + EXCESS_CASH_RATE, years) - 1) * 0.75;
+      const totalReturn = totalCashflow + netCapitalGain + excessCashGrowth;
       return { cashflow: totalCashflow, capitalGain: netCapitalGain, totalReturn, roeAnnual: calcCAGR(totalReturn, equity, years), yearly };
     }
 

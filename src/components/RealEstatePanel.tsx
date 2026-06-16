@@ -57,7 +57,7 @@ export function RealEstatePanel({ state: s, dispatch, results: r, years }: Props
         </Field>
         {s.profile === "single" && (
           <div style={{ marginTop: "0.5rem" }}>
-            <Toggle checked={s.rentingElsewhere} onChange={set("rentingElsewhere")} label="אני שוכר דירה אחרת (קיזוז עד ₪7,500)" />
+            <Toggle checked={s.rentingElsewhere} onChange={set("rentingElsewhere")} label="אני שוכר דירה אחרת (קיזוז במסלול 10%, עד ₪7,500)" />
             {s.rentingElsewhere && <Field label="שכ״ד חודשי ששולם (₪)"><NumberInput value={s.rentPaidMonthly} onChange={set("rentPaidMonthly")} max={7500} /></Field>}
           </div>
         )}
@@ -113,7 +113,7 @@ export function RealEstatePanel({ state: s, dispatch, results: r, years }: Props
         <Field label="מסלול מס שכירות">
           <Select value={s.taxTrack} onChange={set("taxTrack")} options={["exempt","10pct","marginal"]} />
           <div style={{ fontSize: 11, color: T.textMuted, marginTop: 2 }}>
-            {s.taxTrack==="exempt" ? "פטור (עד ₪5,470/חודש)" : s.taxTrack==="10pct" ? "10% ללא ניכוי הוצאות" : "מסלול שולי — עם ניכוי הוצאות"}
+            {s.taxTrack==="exempt" ? "פטור (עד ₪5,654/חודש)" : s.taxTrack==="10pct" ? "10% ללא ניכוי הוצאות" : "מסלול שולי — עם ניכוי הוצאות"}
           </div>
         </Field>
         {s.taxTrack==="marginal" && <Field label="מס שולי (%)"><NumberInput value={s.marginalRate} onChange={set("marginalRate")} min={10} max={50} suffix="%" /></Field>}
