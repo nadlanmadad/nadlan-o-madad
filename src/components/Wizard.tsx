@@ -4,6 +4,7 @@ import type { RealEstateState, IndexState, RealEstateResults, IndexResults } fro
 import { getMadlanUrl, getGovNadlanUrl } from "@/hooks/useRealEstateCalc";
 import { INDEX_LIST } from "@/hooks/useIndexCalc";
 import { fmtILS } from "@/components/UI";
+import { EmailCapture } from "@/components/EmailCapture";
 
 const CITIES = ["תל אביב","ירושלים","חיפה","באר שבע","נתניה","ראשון לציון","הרצליה","רמת גן","פתח תקווה","אחר"];
 
@@ -383,6 +384,9 @@ export function Wizard({ equity, setEquity, years, setYears, reState, reDispatch
               style={{ width: "100%", padding: "16px", background: T.gold, color: T.bgApp, border: "none", borderRadius: T.radiusMd, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 12 }}>
               הצג השוואה מלאה עם גרפים ←
             </button>
+            <div style={{ marginBottom: 12 }}>
+              <EmailCapture source="wizard-result" />
+            </div>
             <button onClick={onAdvanced}
               style={{ width: "100%", padding: "12px", background: "transparent", color: T.textSecondary, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, fontSize: 14, cursor: "pointer" }}>
               ערוך נתונים במצב מתקדם

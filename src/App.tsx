@@ -4,6 +4,7 @@ import { RealEstatePanel } from "@/components/RealEstatePanel";
 import { IndexPanel } from "@/components/IndexPanel";
 import { ComparisonPanel } from "@/components/ComparisonPanel";
 import { Comments } from "@/components/Comments";
+import { EmailCapture } from "@/components/EmailCapture";
 import { Wizard } from "@/components/Wizard";
 import { useRealEstateCalc } from "@/hooks/useRealEstateCalc";
 import { useIndexCalc } from "@/hooks/useIndexCalc";
@@ -96,6 +97,9 @@ export default function App() {
             years={years} equity={equity}
             indexReturnPct={index.state.returnPct} indexDividendPct={index.state.dividendPct} drip={index.state.drip}
           />
+        </div>
+        <div style={{ marginTop:"1.25rem" }}>
+          <EmailCapture source="advanced" />
         </div>
         <Comments />
         <div style={{ marginTop:"2rem", padding:"1.25rem 0", borderTop:`1px solid ${T.border}`, display:"flex", justifyContent:"space-between", flexWrap:"wrap", gap:"0.5rem" }}>
